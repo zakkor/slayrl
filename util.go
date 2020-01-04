@@ -1,5 +1,10 @@
 package main
 
+import (
+	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/inpututil"
+)
+
 type Point struct {
 	X, Y int
 }
@@ -97,4 +102,20 @@ func RectPoints(x1, y1, x2, y2 int) (points []Point) {
 		points = append(points, Point{X: x2, Y: y})
 	}
 	return
+}
+
+// repeatingKeyPressed return true when key is pressed considering the repeat state.
+func repeatingKeyPressed(key ebiten.Key) bool {
+	const (
+		delay    = 30
+		interval = 3
+	)
+	d := inpututil.KeyPressDuration(key)
+	if d == 1 {
+		return true
+	}
+	if d >= delay && (d-delay)%interval == 0 {
+		return true
+	}
+	return false
 }

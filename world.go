@@ -18,7 +18,7 @@ type Tile struct {
 	ObstructsView bool
 }
 
-func NewWorld(sizex, sizey int) *World {
+func NewWorld(sizex, sizey int) World {
 	tiles := make([][]Tile, sizex)
 	for x := 0; x < sizex; x++ {
 		tiles[x] = make([]Tile, sizey)
@@ -32,7 +32,7 @@ func NewWorld(sizex, sizey int) *World {
 		visibility[x] = make([]float64, sizey)
 	}
 
-	return &World{
+	return World{
 		SizeX:          sizex,
 		SizeY:          sizey,
 		tiles:          tiles,

@@ -8,8 +8,8 @@ type Player struct {
 	VisibilityRange int
 }
 
-func NewPlayer(image *ebiten.Image) *Player {
-	return &Player{
+func NewPlayer(image *ebiten.Image) Player {
+	return Player{
 		X:               0,
 		Y:               0,
 		Image:           image,
