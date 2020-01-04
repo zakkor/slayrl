@@ -13,7 +13,7 @@ func NewPlayer(image *ebiten.Image) *Player {
 		X:               0,
 		Y:               0,
 		Image:           image,
-		VisibilityRange: 32,
+		VisibilityRange: 16,
 	}
 }
 

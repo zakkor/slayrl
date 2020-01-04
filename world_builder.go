@@ -66,6 +66,17 @@ func (b *builder) Circle(x, y, r int) *builder {
 	return b
 }
 
+func (b *builder) CircleThick(x, y, r int) *builder {
+	defer b.afterCall()
+
+	points := CircleThickPoints(x, y, r)
+	for _, point := range points {
+		b.mark(point.X, point.Y)
+	}
+
+	return b
+}
+
 func (b *builder) Line(x1, y1, x2, y2 int) *builder {
 	defer b.afterCall()
 

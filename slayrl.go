@@ -21,9 +21,9 @@ var (
 	NumTilesX = ScreenSizeX / TileSizeX
 	NumTilesY = ScreenSizeY / TileSizeY
 
-	playerImage *ebiten.Image
-	groundImage *ebiten.Image
-	wallImage   *ebiten.Image
+	PlayerImage *ebiten.Image
+	GroundImage *ebiten.Image
+	WallImage   *ebiten.Image
 )
 
 func main() {
@@ -31,55 +31,20 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	playerImage = getTileFromTileset(tileset, 0, 4)
-	groundImage = getTileFromTileset(tileset, 14, 2)
-	wallImage = getTileFromTileset(tileset, 0, 11)
+	PlayerImage = getTileFromTileset(tileset, 0, 4)
+	GroundImage = getTileFromTileset(tileset, 14, 2)
+	WallImage = getTileFromTileset(tileset, 0, 11)
 
 	world := NewWorld(100, 100)
 
-	// explosion := world.Tiles()
-	// world.Tiles().Rect(0, 0, 40, 40).Do(func(t *Tile, x, y int) {
-	// 	if x%5 == 0 && y%5 == 0 {
-	// 		explosion.Line(20, 20, x, y)
-	// 	}
-	// })
-	// for i := 0; i < 40; i += 3 {
-	// 	explosion.Except().Line(0, i, 40, i)
-	// }
-	// for i := 0; i < 40; i += 3 {
-	// 	explosion.Except().Line(i, 0, i, 40)
-	// }
-
-	// // Set explosion image
-	// explosion.Do(func(t *Tile, x, y int) {
-	// 	t.Image = wallImage
-	// 	t.Walkable = false
-	// })
-
-	// // Build a rectangular wall, with a hole as an entrance.
-	// world.Tiles().RectFill(5, 5, 20, 20).Do(world.ClearTile)
-	// world.Tiles().Rect(5, 5, 20, 20).Except().Point(9, 5).Do(func(t *Tile, x, y int) {
-	// 	t.Image = wallImage
-	// 	t.Walkable = false
-	// })
-
-	player := NewPlayer(playerImage)
+	player := NewPlayer(PlayerImage)
 	player.X = 10
-	player.Y = 4
-
-	world.Tiles().Rect(10, 10, 20, 20).Rect(22, 10, 40, 20).Do(func(t *Tile, x, y int) {
-		t.Image = wallImage
-		t.Walkable = false
-		t.ObstructsView = true
-	})
-
-	// world.Tiles().Circle(10, 10, 5).Line(15, 15, 20, 21).Do(func(t *Tile, x, y int) {
-	// 	t.Image = wallImage
-	// 	t.Walkable = false
-	// 	t.ObstructsView = true
-	// })
+	player.Y = 10
 
 	world.CalculateVisibility(player.X, player.Y, player.VisibilityRange)
+
+	log := NewLog(450, 250)
+	log.WriteLine("cf andreea")
 
 	update := func(screen *ebiten.Image) error {
 		if repeatingKeyPressed(ebiten.KeyUp) {
@@ -98,6 +63,8 @@ func main() {
 
 		world.Draw(screen)
 		player.Draw(screen)
+
+		log.Draw(screen)
 
 		return ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 	}

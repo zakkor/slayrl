@@ -1,15 +1,14 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten"
 )
 
 type World struct {
-	SizeX, SizeY int
-	tiles        [][]Tile
-	visibility   [][]float64
+	SizeX, SizeY   int
+	tiles          [][]Tile
+	visibility     [][]float64
+	zeroVisibility float64
 }
 
 type Tile struct {
@@ -24,23 +23,21 @@ func NewWorld(sizex, sizey int) *World {
 	for x := 0; x < sizex; x++ {
 		tiles[x] = make([]Tile, sizey)
 		for y := 0; y < sizey; y++ {
-			tiles[x][y] = Tile{X: x, Y: y, Image: groundImage, Walkable: true}
+			tiles[x][y] = Tile{X: x, Y: y, Image: GroundImage, Walkable: true}
 		}
 	}
 
 	visibility := make([][]float64, sizex)
 	for x := 0; x < sizex; x++ {
 		visibility[x] = make([]float64, sizey)
-		for y := 0; y < sizey; y++ {
-			visibility[x][y] = 0
-		}
 	}
 
 	return &World{
-		SizeX:      sizex,
-		SizeY:      sizey,
-		tiles:      tiles,
-		visibility: visibility,
+		SizeX:          sizex,
+		SizeY:          sizey,
+		tiles:          tiles,
+		visibility:     visibility,
+		zeroVisibility: 0.1,
 	}
 }
 
@@ -49,37 +46,24 @@ func (w *World) Tiles() *builder {
 }
 
 func (w *World) ClearTile(t *Tile, x, y int) {
-	*t = Tile{X: x, Y: y, Image: groundImage, Walkable: true}
+	*t = Tile{X: x, Y: y, Image: GroundImage, Walkable: true}
 }
 
 func (w *World) CalculateVisibility(x, y, visrange int) {
 	for x := 0; x < w.SizeX; x++ {
 		for y := 0; y < w.SizeY; y++ {
-			w.visibility[x][y] = 0
+			w.visibility[x][y] = w.zeroVisibility
 		}
 	}
 
-	const falloff = 0.05
+	circle := CircleThickPoints(x, y, visrange)
+	for _, cp := range circle {
+		line := LinePoints(x, y, cp.X, cp.Y)
 
-	rect := RectPoints(x-visrange, y-visrange, x+visrange, y+visrange)
-	for _, rp := range rect {
-		line := LinePoints(x, y, rp.X, rp.Y)
-
-		brightness := 1.0
-		var slope float32
-		if x-rp.X == 0 {
-			slope = 0.0
-		} else {
-			slope = float32(y-rp.Y) / float32(x-rp.X)
-		}
-		if slope < 0 {
-			slope = -slope
-		}
-
-		// fmt.Println("slope:", slope)
-		// length := int(float32(visrange) / slope)
-		length := visrange
-		fmt.Println("leng:", length)
+		var (
+			brightness         = 1.0
+			falloff    float64 = (brightness - w.zeroVisibility) / float64(len(line))
+		)
 		for _, lp := range line {
 			if lp.X < 0 || lp.Y < 0 {
 				continue
@@ -89,11 +73,6 @@ func (w *World) CalculateVisibility(x, y, visrange int) {
 
 			// We draw the thing that is obstructing the view, and next iteration stop drawing
 			if w.tiles[lp.X][lp.Y].ObstructsView {
-				break
-			}
-			// If our line has reached its limit
-			length--
-			if length == 0 {
 				break
 			}
 		}
@@ -107,10 +86,10 @@ func (w *World) Draw(screen *ebiten.Image) {
 }
 
 func (t *Tile) Draw(screen *ebiten.Image, visibility float64) {
-	op := &ebiten.DrawImageOptions{}
+	op := ebiten.DrawImageOptions{}
 	// Set position
 	op.GeoM.Translate(float64(t.X*TileSizeX), float64(t.Y*TileSizeY))
 	// Set visibility
 	op.ColorM.Scale(1.0, 1.0, 1.0, visibility)
-	screen.DrawImage(t.Image, op)
+	screen.DrawImage(t.Image, &op)
 }

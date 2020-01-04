@@ -78,6 +78,15 @@ func CirclePoints(x, y, r int) []Point {
 	return points
 }
 
+func CircleThickPoints(x, y, r int) (points []Point) {
+	circle := CirclePoints(x, y, r)
+	for _, cp := range circle {
+		points = append(points, cp)
+		points = append(points, CirclePoints(cp.X, cp.Y, 1)...)
+	}
+	return
+}
+
 func RectPoints(x1, y1, x2, y2 int) (points []Point) {
 	for x := x1; x <= x2; x++ {
 		points = append(points, Point{X: x, Y: y1})
