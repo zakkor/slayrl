@@ -4,6 +4,7 @@ import (
 	"image/color"
 
 	"github.com/hajimehoshi/ebiten"
+	"github.com/hajimehoshi/ebiten/text"
 )
 
 type Log struct {
@@ -28,13 +29,12 @@ func (l *Log) WriteLine(message string) {
 func (l *Log) Draw(screen *ebiten.Image) {
 	l.Image.Fill(color.Black)
 
-	// for _, line := range l.Lines {
-	// 	ebiten.Util
-	// 	l.Image.draw
-	// }
+	const lineHeight = 25
+	for i, line := range l.Lines {
+		text.Draw(l.Image, line, DefaultFontFace, 0, (i+1)*lineHeight, color.White)
+	}
 
 	op := ebiten.DrawImageOptions{}
 	op.GeoM.Translate(0, float64(ScreenSizeY-l.Height))
-	// op.GeoM.Translate(0, 50)
 	screen.DrawImage(l.Image, &op)
 }

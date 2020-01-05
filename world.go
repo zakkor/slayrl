@@ -23,7 +23,7 @@ func NewWorld(sizex, sizey int) World {
 	for x := 0; x < sizex; x++ {
 		tiles[x] = make([]Tile, sizey)
 		for y := 0; y < sizey; y++ {
-			tiles[x][y] = Tile{X: x, Y: y, Image: GroundImage, Walkable: true}
+			tiles[x][y] = Tile{X: x, Y: y, Image: Images["ground"], Walkable: true}
 		}
 	}
 
@@ -46,7 +46,7 @@ func (w *World) Tiles() *builder {
 }
 
 func (w *World) ClearTile(t *Tile, x, y int) {
-	*t = Tile{X: x, Y: y, Image: GroundImage, Walkable: true}
+	*t = Tile{X: x, Y: y, Image: Images["ground"], Walkable: true}
 }
 
 func (w *World) CalculateVisibility(x, y, visrange int) {

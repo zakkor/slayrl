@@ -14,23 +14,22 @@ type Game struct {
 }
 
 func NewGame() *Game {
-	tileset, err := loadTileset("./resources/tileset_zilk.png")
-	if err != nil {
-		panic(err)
-	}
-	PlayerImage = getTileFromTileset(tileset, 0, 4)
-	GroundImage = getTileFromTileset(tileset, 14, 2)
-	WallImage = getTileFromTileset(tileset, 0, 11)
-
 	world := NewWorld(100, 100)
+	world.Tiles().Point(20, 20).Line(10, 10, 10, 15).Do(func(t *Tile, x, y int) {
+		t.ObstructsView = true
+		t.Image = Images["wall"]
+	})
 
-	player := NewPlayer(PlayerImage)
+	player := NewPlayer()
 	player.X = 10
 	player.Y = 10
 
 	world.CalculateVisibility(player.X, player.Y, player.VisibilityRange)
 
 	log := NewLog(450, 250)
+	log.WriteLine("Hello World")
+	log.WriteLine("Hello World")
+	log.WriteLine("Hello World")
 	log.WriteLine("Hello World")
 
 	return &Game{
@@ -46,14 +45,12 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func (g *Game) Update(screen *ebiten.Image) error {
 	g.ProcessInput()
+	g.LogicalUpdate()
 
 	if ebiten.IsDrawingSkipped() {
 		return nil
 	}
-
-	g.world.Draw(screen)
-	g.player.Draw(screen)
-	g.log.Draw(screen)
+	g.Draw(screen)
 
 	return ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
@@ -68,4 +65,13 @@ func (g *Game) ProcessInput() {
 	} else if repeatingKeyPressed(ebiten.KeyRight) {
 		g.player.Move(&g.world, 1, 0)
 	}
+}
+
+func (g *Game) LogicalUpdate() {
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+	g.world.Draw(screen)
+	g.player.Draw(screen)
+	g.log.Draw(screen)
 }
