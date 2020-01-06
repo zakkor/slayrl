@@ -93,13 +93,13 @@ func (b *builder) Except() *builder {
 	return b
 }
 
-func (b *builder) Do(fn func(*Tile, int, int)) {
+func (b *builder) Do(fn func(*Entity)) {
 	for x := 0; x < b.w.SizeX; x++ {
 		for y := 0; y < b.w.SizeY; y++ {
 			if !b.marked[x][y] {
 				continue
 			}
-			fn(&b.w.tiles[x][y], x, y)
+			fn(b.w.At(x, y))
 		}
 	}
 }

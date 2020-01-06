@@ -7,18 +7,23 @@ import (
 	"github.com/hajimehoshi/ebiten/text"
 )
 
+const (
+	LogSizeX = ScreenSizeX
+	LogSizeY = 200
+)
+
 type Log struct {
 	Image         *ebiten.Image
 	Width, Height int
 	Lines         []string
 }
 
-func NewLog(width, height int) Log {
-	image, _ := ebiten.NewImage(width, height, ebiten.FilterDefault)
+func NewLog() Log {
+	image, _ := ebiten.NewImage(LogSizeX, LogSizeY, ebiten.FilterDefault)
 	return Log{
 		Image:  image,
-		Width:  width,
-		Height: height,
+		Width:  LogSizeX,
+		Height: LogSizeY,
 	}
 }
 
@@ -27,11 +32,18 @@ func (l *Log) WriteLine(message string) {
 }
 
 func (l *Log) Draw(screen *ebiten.Image) {
-	l.Image.Fill(color.Black)
+	const (
+		paddingTop  = 18
+		paddingLeft = 8
+		lineHeight  = 28
+	)
 
-	const lineHeight = 25
+	l.Image.Fill(color.Black)
 	for i, line := range l.Lines {
-		text.Draw(l.Image, line, DefaultFontFace, 0, (i+1)*lineHeight, color.White)
+		text.Draw(l.Image, line, DefaultFontFace,
+			paddingLeft, paddingTop+i*lineHeight,
+			// color.RGBA{R: 255, G: 255, B: 255, A: uint8(255 - i*50)})
+			color.White)
 	}
 
 	op := ebiten.DrawImageOptions{}

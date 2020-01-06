@@ -15,22 +15,21 @@ type Game struct {
 
 func NewGame() *Game {
 	world := NewWorld(100, 100)
-	world.Tiles().Point(20, 20).Line(10, 10, 10, 15).Do(func(t *Tile, x, y int) {
-		t.ObstructsView = true
-		t.Image = Images["wall"]
+	world.Tiles().Point(20, 20).Line(10, 10, 10, 15).Do(func(e *Entity) {
+		e.ObstructsView = true
+		e.Walkable = false
+		e.Image = Images["wall"]
 	})
 
 	player := NewPlayer()
-	player.X = 10
+	player.X = 15
 	player.Y = 10
 
 	world.CalculateVisibility(player.X, player.Y, player.VisibilityRange)
 
-	log := NewLog(450, 250)
-	log.WriteLine("Hello World")
-	log.WriteLine("Hello World")
-	log.WriteLine("Hello World")
-	log.WriteLine("Hello World")
+	log := NewLog()
+	log.WriteLine("luamiai pula sa mio sugi ca pe vaca cand o mulgi")
+	log.WriteLine("hey andreea")
 
 	return &Game{
 		world:  world,
