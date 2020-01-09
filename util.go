@@ -1,6 +1,8 @@
 package main
 
 import (
+	"math/rand"
+
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/inpututil"
 )
@@ -118,4 +120,9 @@ func repeatingKeyPressed(key ebiten.Key) bool {
 		return true
 	}
 	return false
+}
+
+// RandIntRange returns a random int in the range [min, max].
+func RandIntRange(min, max int) int {
+	return rand.Intn(max+1-min) + min
 }

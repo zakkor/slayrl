@@ -23,9 +23,11 @@ func init() {
 		panic(err)
 	}
 	Images = map[string]*ebiten.Image{
-		"player": getTileFromTileset(tileset, 0, 4),
-		"ground": getTileFromTileset(tileset, 14, 2),
-		"wall":   getTileFromTileset(tileset, 0, 11),
+		"player":    getTileFromTileset(tileset, 0, 4),
+		"looker":    getTileFromTileset(tileset, 4, 0),
+		"character": getTileFromTileset(tileset, 2, 0),
+		"ground":    getTileFromTileset(tileset, 14, 2),
+		"wall":      getTileFromTileset(tileset, 0, 11),
 	}
 
 	// Fonts
