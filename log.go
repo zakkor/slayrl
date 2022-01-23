@@ -3,8 +3,8 @@ package main
 import (
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 const (
@@ -19,7 +19,7 @@ type Log struct {
 }
 
 func NewLog() Log {
-	image, _ := ebiten.NewImage(LogSizeX, LogSizeY, ebiten.FilterDefault)
+	image := ebiten.NewImage(LogSizeX, LogSizeY)
 	return Log{
 		Image:  image,
 		Width:  LogSizeX,

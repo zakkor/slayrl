@@ -2,12 +2,13 @@ package main
 
 import (
 	"image"
+	_ "image/png"
 	"io/ioutil"
 
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"golang.org/x/image/font"
 )
 
@@ -18,7 +19,7 @@ var (
 
 func init() {
 	// Images
-	tileset, err := loadTileset("./resources/tileset_zilk.png")
+	tileset, _, err := ebitenutil.NewImageFromFile("./tileset_zilk.png")
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +32,7 @@ func init() {
 	}
 
 	// Fonts
-	fontData, err := ioutil.ReadFile("./resources/slkscr.ttf")
+	fontData, err := ioutil.ReadFile("./slkscr.ttf")
 	if err != nil {
 		panic(err)
 	}
@@ -44,20 +45,6 @@ func init() {
 		// DPI:     72,
 		Hinting: font.HintingFull,
 	})
-}
-
-func loadTileset(path string) (*ebiten.Image, error) {
-	f, err := ebitenutil.OpenFile(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	img, _, err := image.Decode(f)
-	if err != nil {
-		return nil, err
-	}
-	return ebiten.NewImageFromImage(img, ebiten.FilterDefault)
 }
 
 func getTileFromTileset(tileset *ebiten.Image, ix, iy int) *ebiten.Image {

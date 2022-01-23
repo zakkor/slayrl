@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"image/color"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
-	"github.com/hajimehoshi/ebiten/text"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 )
 
 type Game struct {
@@ -60,18 +60,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 	return ScreenSizeX, ScreenSizeY
 }
 
-func (g *Game) Update(screen *ebiten.Image) error {
-	g.ProcessInput()
-
-	if ebiten.IsDrawingSkipped() {
-		return nil
-	}
-	g.Draw(screen)
-
-	return ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
-}
-
-func (g *Game) ProcessInput() {
+func (g *Game) Update() error {
 	switch g.TopState() {
 	case StateDefault:
 		// Movement
@@ -121,6 +110,8 @@ func (g *Game) ProcessInput() {
 	if g.TopState() != StateDefault && repeatingKeyPressed(ebiten.KeyEscape) {
 		g.PopState()
 	}
+
+	return nil
 }
 
 func (g *Game) LogicalUpdate(d float64) {
@@ -150,6 +141,8 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			g.looker.X*TileSizeX, g.looker.Y*TileSizeY-8,
 			color.White)
 	}
+
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
 }
 
 func (g *Game) TopState() State {
