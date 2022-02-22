@@ -29,7 +29,7 @@ func DirectionFromCoords(dx, dy int) Direction {
 	} else if dx == -1 && dy == 1 {
 		return DirectionDownLeft
 	} else if dx == 1 && dy == 1 {
-		return DirectionDownLeft
+		return DirectionDownRight
 	}
 	panic("bad coords for direction")
 }
